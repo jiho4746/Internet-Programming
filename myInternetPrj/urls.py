@@ -20,9 +20,14 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('blog/', include('blog.urls')), #서버IP/blog
-    path('admin/', admin.site.urls), #서버IP/admin
-    path('', include('single_pages.urls')), #서버IP/
+    #서버IP/admin (admin url은 생성한 장고 프로젝트에서 제공)
+    path('admin/', admin.site.urls),
+    #서버IP/blog (blog앱에 있는 urls.py와 연결)
+    path('blog/', include('blog.urls')),
+    #서버IP/blog (single_pages앱에 있는 urls.py와 연결)
+    path('', include('single_pages.urls')),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #서버IP/media/
+#서버IP/media/
+#기존에 추가 / 이미지도 static파일
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

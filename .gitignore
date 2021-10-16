@@ -58,6 +58,7 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
+#(git 과의 충돌이 일어날 수 있음)
 db.sqlite3
 db.sqlite3-journal
 
@@ -105,13 +106,16 @@ celerybeat.pid
 .env
 .venv
 env/
+#(venv/ - 설치파일들은 버전관리할 필요가 없음)
 venv/
 ENV/
 env.bak/
 venv.bak/
 
 # PyCharm
+#(.idea/ - 파이참에서 설정에 관련된 내용)
 .idea/
+#(migrate 할 때마다 버전 관리할 필요 없음)
 migrations/
 _media/
 

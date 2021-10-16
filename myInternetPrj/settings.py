@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 설치한 2개의 앱을 등록해야 migrate 명령이 제대로 실행됨
     'blog',
     'single_pages'
 ]
@@ -107,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
+# 시간을 서울로!!
 TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
@@ -123,6 +124,7 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
+#실제로 media가 저장되어 있는 경우
 MEDIA_ROOT = os.path.join(BASE_DIR, '_media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

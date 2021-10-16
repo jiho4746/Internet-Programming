@@ -1,32 +1,42 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
+#models와 다른 파일이기 때문에 Post 사용하려면 import!!
 from .models import Post
 # Create your tests here.
+
 class TestView(TestCase):
+    #setUp - 테스트를 실행하기 전에 공통적으로 수행할 어떤 작업의 내용을 넣어줌
     def setUp(self):
+        #Client 클래스를 통해 실제 경로의 뷰와 매치해서 테스트를 진행
         self.client = Client()
 
+    #포스트 목록
     def test_post_list(self):
         #포스트 목록 페이지를 가져온다
         response = self.client.get('/blog/')
-        #정상적으로 페이지가 로드
+        #정상적으로 페이지가 로드되었는가 / 200(ok)
+        #asserEqual - 완벽하게 일치
         self.assertEqual(response.status_code, 200)
-        #페이지 타이틀이 'Blog'
+        #페이지 타이틀이 'Blog'인가
+        #(html분석기 parser)
         soup = BeautifulSoup(response.content, 'html.parser')
         self.assertEqual(soup.title.text, 'Blog')
-        #네비게이션바가 있다
+        #네비게이션바를 가져온다
         navbar = soup.nav
-        #네비게이션바에 Blog, AboutMe라는 문구가 있다
+        #네비게이션바에 Blog, AboutMe라는 문구가 있는가
+        #asserIn - 부분적으로 동일하다
         self.assertIn('Blog', navbar.text)
         self.assertIn('About Me', navbar.text)
 
         #포스트(게시물)이 하나도 없는 경우
         self.assertEqual(Post.objects.count(), 0)
         #적절한 안내 문구가 포함되어 있는지
+        #id가 main-area인 div
         main_area = soup.find('div', id='main-area')
         self.assertIn('아직 게시물이 없습니다', main_area.text)
 
         #포스트(게시물)이 2개 존재하는 경우
+        #임의로 포스트 2개를 만들었다
         post_001 = Post.objects.create(
             title = '첫 번째 포스트입니다.',
             content = 'Hello World!!! We are the world...'
@@ -36,7 +46,7 @@ class TestView(TestCase):
             content='1등이 전부가 아니잖아요'
         )
         self.assertEqual(Post.objects.count(), 2)
-        #목록페이지를 새롭게 불러와서
+        #목록페이지를 새롭게 불러온다
         response = self.client.get('/blog/')
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -46,6 +56,7 @@ class TestView(TestCase):
         self.assertIn(post_002.title, main_area.text)
         self.assertNotIn('아직 게시물이 없습니다.', main_area.text)
 
+    #포스트 상세페이지
     def test_post_detail(self):
         #포스트 하나
         post_001 = Post.objects.create(
