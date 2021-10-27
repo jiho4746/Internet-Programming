@@ -30,7 +30,7 @@
             </div>
               <div class = "card-footer">
                   <!--내장 템플릿 사용 / 시간 출력 형식 바꿈-->
-                  {{ p.created_at | date:"yy-m-d h:m:s"}} by 작성자(개발 예정)
+                  {{ p.created_at | date:"20y-m-d h:m:s"}} by {{ p.author | upper }}
               </div>
         </div>
             {% endfor %}

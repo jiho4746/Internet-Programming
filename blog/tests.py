@@ -4,6 +4,7 @@ from django.test import TestCase, Client
 from bs4 import BeautifulSoup
 #models와 다른 파일이기 때문에 Post 사용하려면 import!!
 from .models import Post
+from django.contrib.auth.models import User
 # Create your tests here.
 # test와 관련된 클래스의 이름은 test로 시작
 class TestView(TestCase):
@@ -11,7 +12,8 @@ class TestView(TestCase):
     def setUp(self):
         #Client 클래스를 통해 실제 경로의 뷰와 매치해서 테스트를 진행
         self.client = Client()
-
+        self.user_james = User.objects.create_user(username='James', password='somepassword')
+        self.user_trump = User.objects.create_user(username='Trump', password='somepassword')
     #navbar
     def navbar_test(self, soup):
         # 네비게이션바를 가져온다
@@ -58,11 +60,13 @@ class TestView(TestCase):
         #임의로 포스트 2개를 만들었다
         post_001 = Post.objects.create(
             title= '첫 번째 포스트입니다.',
-            content= 'Hello World!!! We are the world...'
+            content= 'Hello World!!! We are the world...',
+            author=self.user_james
         )
         post_002 = Post.objects.create(
             title='두 번째 포스트입니다.',
-            content='1등이 전부가 아니잖아요'
+            content='1등이 전부가 아니잖아요',
+            author=self.user_trump
         )
         self.assertEqual(Post.objects.count(), 2)
         #목록페이지를 새롭게 불러온다
@@ -74,13 +78,16 @@ class TestView(TestCase):
         self.assertIn(post_001.title, main_area.text)
         self.assertIn(post_002.title, main_area.text)
         self.assertNotIn('아직 게시물이 없습니다.', main_area.text)
+        self.assertIn(self.user_james.username.upper(), main_area.text)
+        self.assertIn(self.user_trump.username.upper(), main_area.text)
 
     #포스트 상세페이지
     def test_post_detail(self):
         #포스트 하나
         post_001 = Post.objects.create(
             title='첫 번째 포스트입니다.',
-            content='Hello World!!! We are the world...'
+            content='Hello World!!! We are the world...',
+            author = self.user_james
         )
         #이 포스트의 url이 /blog/1
         self.assertEqual(post_001.get_absolute_url(), '/blog/1')
@@ -101,5 +108,7 @@ class TestView(TestCase):
         #아직 작성중
         #포스트에 내용이 있는가
         self.assertIn(post_001.content, post_area.text)
+
+        self.assertIn(self.user_james.username.upper(), post_area.text)
 
 

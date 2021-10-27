@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 import os
 # Create your models here.
 
@@ -19,10 +20,13 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     #author
-    
+    #author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+
+
     #Post의 pk(고유번호) + Post의 title
     def __str__(self):
-        return f'[{self.pk}]{self.title}'
+        return f'[{self.pk}]{self.title} :: {self.author}'
     #(상세페이지로 이동하기 위해) 숫자를 가져옴
     def get_absolute_url(self):
         return f'/blog/{self.pk}'
