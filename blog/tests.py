@@ -1,9 +1,11 @@
+#python manage.py test
 from django.test import TestCase, Client
+#pip install beautifulsoup4(설치)
 from bs4 import BeautifulSoup
 #models와 다른 파일이기 때문에 Post 사용하려면 import!!
 from .models import Post
 # Create your tests here.
-
+# test와 관련된 클래스의 이름은 test로 시작
 class TestView(TestCase):
     #setUp - 테스트를 실행하기 전에 공통적으로 수행할 어떤 작업의 내용을 넣어줌
     def setUp(self):
@@ -23,8 +25,8 @@ class TestView(TestCase):
         self.assertEqual(soup.title.text, 'Blog')
         #네비게이션바를 가져온다
         navbar = soup.nav
-        #네비게이션바에 Blog, AboutMe라는 문구가 있는가
-        #asserIn - 부분적으로 동일하다
+        #네비게이션바에 Blog, About Me라는 문구가 있는가
+        #asserIn - 부분적으로 동일하다 / navbar.text(navbar의 모든 내용 포함)
         self.assertIn('Blog', navbar.text)
         self.assertIn('About Me', navbar.text)
 
@@ -35,11 +37,11 @@ class TestView(TestCase):
         main_area = soup.find('div', id='main-area')
         self.assertIn('아직 게시물이 없습니다', main_area.text)
 
-        #포스트(게시물)이 2개 존재하는 경우
+        #포스트(게시물)이 2개 존재하는 경우(admin 페이지가 아닌 파이썬 내에서 작성)
         #임의로 포스트 2개를 만들었다
         post_001 = Post.objects.create(
-            title = '첫 번째 포스트입니다.',
-            content = 'Hello World!!! We are the world...'
+            title= '첫 번째 포스트입니다.',
+            content= 'Hello World!!! We are the world...'
         )
         post_002 = Post.objects.create(
             title='두 번째 포스트입니다.',
@@ -73,9 +75,9 @@ class TestView(TestCase):
         navbar = soup.nav
         self.assertIn('Blog', navbar.text)
         self.assertIn('About Me', navbar.text)
-        #포스트에 title은 웹브라우저의 title에 있는가
+        #포스트의 title은 웹브라우저의 title에 있는가
         self.assertIn(post_001.title, soup.title.text)
-        #포스트에 title은 포스트영역에도 있는가
+        #포스트의 title은 포스트영역에도 있는가
         main_area = soup.find('div', id='main-area')
         post_area = main_area.find('div', id='post-area')
         self.assertIn(post_001.title, post_area.text)

@@ -123,6 +123,8 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
+
+#python -m pip install pillow
 MEDIA_URL = '/media/'
 #실제로 media가 저장되어 있는 경우
 MEDIA_ROOT = os.path.join(BASE_DIR, '_media')

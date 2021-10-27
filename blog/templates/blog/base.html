@@ -4,6 +4,7 @@
 {% load static %}
 <html lang="ko">
 <head>
+    <!--원래 post_list에서는 Blog를 사용했으나 post_detail에서는 각 타이틀이 들어가기 때문에 block-->
     <title>{% block head_title %}Blog{% endblock %}</title>
     <!--부트스트랩 css 연결-->
     <!--직접 연결할 때의 주소-->
@@ -87,10 +88,12 @@
 
       <div class="container mt-3">
       <div class="row"> <!--한 행 만들기-->
-        <div class="col-md-8 col-lg-9" id="main-area">
+        <div class="col-md-8 col-lg-9" id="main-area"> <!--test-->
+
             {% block main_area %}
             <!--다른 부분은 여기서 작성되어 보여짐-->
-            {%endblock %}
+            {% endblock %}
+
             <div class="col-md-4 col-lg-3">
                  <!-- Search widget-->
                  <div class="card mb-4">

@@ -1,5 +1,6 @@
 <!--base.html 문서를 가져와 사용할 것이다-->
 {% extends 'blog/base.html' %}
+<!--post_detail에서는 각 타이틀이 들어가기 때문에 block-->
 {% block head_title %}
     {{ post.title }} - Blog
 {% endblock %}
