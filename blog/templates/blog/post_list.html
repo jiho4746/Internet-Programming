@@ -6,7 +6,7 @@
             {% if post_list.exists %}  <!-- Blog post (포스트 2개, 전체 내용을 출력하는 형태의 기존 html)-->
             {% for p in post_list %}
           <!-- Blog post-->
-          <div class="card mb-4">
+          <div class="card mb-4" id="post-{{ p.pk }}">
               {% if p.head_image %}
                   <!--if문을 주지 않으면 모두 업로드 되지 않으면 오류 화면이 뜸-->
                   <img class="card-img-top" src="{{ p.head_image.url }}" alt="{{p}}의 head image" />
@@ -16,6 +16,11 @@
                   <img class="card-img-top" src="https://picsum.photos/seed/{{ p.id }}/800/200" alt="random image"/>
               {% endif %}
               <div class="card-body">
+                {% if p.category %}
+                    <span class="badge bg-secondary float-right">{{ p.category }}</span>
+                {% else %}
+                    <span class="badge bg-secondary float-right">미분류</span>
+                {% endif %}
                 <!--내장 템플릿 사용 / 영어(대문자) -->
                 <h2 class="card-title h4">{{ p.title | upper }}</h2>
                 <!--hook text-->

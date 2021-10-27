@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 #models와 다른 파일이기 때문에 Post 사용하려면 import!!
-from blog.models import Post
+from blog.models import Post, Category
+
 
 # <CBV 스타일로 페이지 만들기>
 #블로그 목록
@@ -11,14 +12,22 @@ class PostList(ListView) :
     ordering = '-pk'
 #   template_name = 'blog/post_list.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PostList, self).get_context_data()
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context
+
 #블로그 상세 페이지
 #post_detail.html
 class PostDetail(DetailView) :
     model = Post
 
-
-
-
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PostDetail, self).get_context_data()
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context
 
 #<FBV 스타일로 페이지 만들기>
 
