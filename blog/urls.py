@@ -17,4 +17,6 @@ urlpatterns = [ #서버IP/blog/
     path('<int:pk>/', views.PostDetail.as_view()),
     # 카테고리
     path('category/<str:slug>', views.category_page),
+    # 태그
+    path('tag/<str:slug>', views.tag_page),
 ]

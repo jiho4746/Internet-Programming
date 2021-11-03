@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 #models와 다른 파일이기 때문에 Post 사용하려면 import!!
-from blog.models import Post, Category
+from blog.models import Post, Category, Tag
 
 
 # <CBV 스타일로 페이지 만들기>
@@ -44,6 +44,20 @@ def category_page(request, slug):
                       'categories': Category.objects.all(),
                       'no_category_post_count': Post.objects.filter(category=None).count(),
                       'category': category
+                  }
+                  )
+
+#태그
+def tag_page(request, slug):
+    tag = Tag.objects.get(slug=slug)
+    post_list = tag.post_set.all()
+
+    return render(request, 'blog/post_list.html',
+                  {
+                      'post_list': post_list,
+                      'categories': Category.objects.all(),
+                      'no_category_post_count': Post.objects.filter(category=None).count(),
+                      'tag': tag
                   }
                   )
 
