@@ -19,4 +19,5 @@ urlpatterns = [ #서버IP/blog/
     path('category/<str:slug>', views.category_page),
     # 태그
     path('tag/<str:slug>', views.tag_page),
+    path('create_post/', views.PostCreate.as_view()),
 ]
