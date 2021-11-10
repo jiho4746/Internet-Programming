@@ -26,6 +26,8 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     #서버IP/blog (single_pages앱에 있는 urls.py와 연결)
     path('', include('single_pages.urls')),
+
+    path('markdownx/', include('markdownx.urls')),
 ]
 
 #서버IP/media/
