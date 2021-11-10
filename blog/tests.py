@@ -13,6 +13,9 @@ class TestView(TestCase):
         #Client 클래스를 통해 실제 경로의 뷰와 매치해서 테스트를 진행
         self.client = Client()
         self.user_james = User.objects.create_user(username='James', password='somepassword')
+        self.user_james.is_staff = True
+        self.user_james.save()
+
         self.user_trump = User.objects.create_user(username='Trump', password='somepassword')
 
         self.category_programming = Category.objects.create(name='programming', slug='programming')
@@ -112,8 +115,12 @@ class TestView(TestCase):
     def test_create_post(self):
         response = self.client.get('/blog/create_post/')
         self.assertNotEqual(response.status_code, 200)
-        response = self.client.login(username='Trump', password='somepassword')
 
+        response = self.client.login(username='Trump', password='somepassword')
+        response = self.client.get('/blog/create_post/')
+        self.assertNotEqual(response.status_code, 200)
+
+        response = self.client.login(username='James', password='somepassword')
         response = self.client.get('/blog/create_post/')
         self.assertEqual(response.status_code, 200)
 
@@ -130,7 +137,7 @@ class TestView(TestCase):
                          )
         last_post = Post.objects.last()
         self.assertIn(last_post.title, "Post form 만들기")
-        self.assertIn(last_post.author.username, 'Trump')
+        self.assertIn(last_post.author.username, 'James')
 
     #포스트 목록
     def test_post_list(self):

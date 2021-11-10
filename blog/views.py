@@ -2,18 +2,22 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView
 #models와 다른 파일이기 때문에 Post 사용하려면 import!!
 from blog.models import Post, Category, Tag
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 
 # <CBV 스타일로 페이지 만들기>
 #블로그 목록
 #post_list.html
-class PostCreate(LoginRequiredMixin,CreateView):
+class PostCreate(LoginRequiredMixin,UserPassesTestMixin, CreateView):
     model = Post
     fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category', 'tags']
 
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.is_staff
+
     def form_valid(self, form):
         current_user = self.request.user
-        if current_user.is_authenticated:
+        if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
             form.instance.author = current_user
             return super(PostCreate,self).form_valid(form)
         else:
