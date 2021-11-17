@@ -60,7 +60,7 @@ class Post(models.Model):
 
     # (상세페이지로 이동하기 위해) 숫자를 가져옴
     def get_absolute_url(self):
-        return f'/blog/{self.pk}'
+        return f'/blog/{self.pk}/'
 
     # 파일의 이름만 가져옴
     def get_file_name(self):
@@ -84,5 +84,5 @@ class Comment(models.Model):
         return f'{self.author}::{self.content}'
 
     def get_absolute_url(self):
-        return f'{self.post.get_absolute_url()}#comment-{self.pk}'
+        return f'{self.Post.get_absolute_url()}#comment-{self.pk}'
 
