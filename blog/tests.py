@@ -3,7 +3,7 @@ from django.test import TestCase, Client
 #pip install beautifulsoup4(설치)
 from bs4 import BeautifulSoup
 #models와 다른 파일이기 때문에 Post 사용하려면 import!!
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Comment
 from django.contrib.auth.models import User
 # Create your tests here.
 # test와 관련된 클래스의 이름은 test로 시작
@@ -47,6 +47,12 @@ class TestView(TestCase):
             author=self.user_trump
         )
         self.post_003.tags.add(self.tag_python, self.tag_python_kor)
+
+        self.comment_001 = Comment.objects.create(
+            Post=self.post_001,
+            author=self.user_trump,
+            content='첫번째 댓글입니다.'
+        )
 
     #navbar
     def navbar_test(self, soup):
@@ -279,5 +285,11 @@ class TestView(TestCase):
         self.assertIn(self.post_001.content, post_area.text)
 
         self.assertIn(self.user_james.username.upper(), post_area.text)
+
+        comments_area = soup.find('div', id='comment-area')
+        comment_001_area = comments_area.find('div', id='comment-1')
+        self.assertIn(self.comment_001.author.username, comment_001_area.text)
+        self.assertIn(self.comment_001.content, comment_001_area.text)
+
 
 
