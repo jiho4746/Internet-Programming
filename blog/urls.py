@@ -23,4 +23,6 @@ urlpatterns = [ #서버IP/blog/
     #수정
     path('update_post/<int:pk>/', views.PostUpdate.as_view()),
     path('<int:pk>/new_comment/', views.new_comment),
+    #검색 결과 (여러 가지 형태가 들어올 수 있기 때문에 변수 q)
+    path('search/<str:q>/', views.PostSearch.as_view()),
 ]

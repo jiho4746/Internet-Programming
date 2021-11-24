@@ -7,6 +7,7 @@ from blog.models import Post, Category, Tag
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .forms import CommentForm
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 def new_comment(request, pk):
     if request.user.is_authenticated:
@@ -103,6 +104,24 @@ class PostList(ListView) :
         context = super(PostList, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context
+
+#반드시 PostList 다음에 선언, list 내용을 알아야 검색이 가능하기 때문
+class PostSearch(PostList):
+    paginate_by = None
+
+    #전달받은 검색결과로 포스트를 찾음
+    def get_queryset(self):
+        q = self.kwargs['q'] #검색결과를 가져옴
+        post_list = Post.objects.filter(
+            Q(title__contains=q) | Q(tags__name__contains=q)
+        ).distinct() #똑같은 포스트가 여러개이면 하나만 가져오겠다
+        return post_list
+
+    def get_context_data(self, **kwargs):
+        context = super(PostSearch, self).get_context_data()
+        q = self.kwargs['q']  # 검색결과를 가져옴
+        context['search_info'] = f'Search : {q}({self.get_queryset().count()})'
         return context
 
 #블로그 상세 페이지
