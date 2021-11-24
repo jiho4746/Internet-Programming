@@ -15,7 +15,7 @@ def new_comment(request, pk):
             comment_form = CommentForm(request.POST)
             if comment_form.is_valid():
                 comment = comment_form.save(commit=False)
-                comment.Post = post
+                comment.post = post
                 comment.author = request.user
                 comment.save()
                 return redirect(comment.get_absolute_url())
@@ -96,6 +96,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView): #모델명_form
 class PostList(ListView) :
     model = Post
     ordering = '-pk'
+    paginate_by = 5 #화면에 5개씩 출력
 #   template_name = 'blog/post_list.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):

@@ -7,11 +7,11 @@ from .models import Post, Category, Tag, Comment
 # models.py에 생성해 놓은 Post 모델을 등록 - > admin 페이지에서 post 보임
 admin.site.register(Post, MarkdownxModelAdmin)
 admin.site.register(Comment)
+
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('name',)}
+admin.site.register(Category, CategoryAdmin)
 
 class TagAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('name',)}
-
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Tag)
+admin.site.register(Tag, TagAdmin)

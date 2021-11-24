@@ -18,12 +18,16 @@ class Tag(models.Model):
         return f'/blog/tag/{self.slug}'
 
 
+#<다대일관계(개발자 제공, 따로 정의)>
 class Category(models.Model):
+    #동일한 이름의 카테고리가 등록되지 않도록 unique=True
     name = models.CharField(max_length=50, unique=True)
+    #한글 사용 가능하도록 allow_unicode=True
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
 
     def __str__(self):
         return self.name
+    #categorys(잘못 표현), 대응되는 문구로 변경
 
     def get_absolute_url(self):
         return f'/blog/category/{self.slug}'
@@ -75,7 +79,7 @@ class Post(models.Model):
         return markdown(self.content)
 
 class Comment(models.Model):
-    Post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -84,5 +88,5 @@ class Comment(models.Model):
         return f'{self.author}::{self.content}'
 
     def get_absolute_url(self):
-        return f'{self.Post.get_absolute_url()}#comment-{self.pk}'
+        return f'{self.post.get_absolute_url()}#comment-{self.pk}'
 

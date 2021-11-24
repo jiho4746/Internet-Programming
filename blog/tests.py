@@ -48,11 +48,13 @@ class TestView(TestCase):
         )
         self.post_003.tags.add(self.tag_python, self.tag_python_kor)
 
+        #댓글
         self.comment_001 = Comment.objects.create(
-            Post=self.post_001,
+            post=self.post_001,
             author=self.user_trump,
             content='첫번째 댓글입니다.'
         )
+
     def test_comment_form(self):
         self.assertEqual(Comment.objects.count(), 1)
         self.assertEqual(self.post_001.comment_set.count(), 1)
@@ -87,11 +89,11 @@ class TestView(TestCase):
         self.assertEqual(Comment.objects.count(), 2)
         self.assertEqual(self.post_001.comment_set.count(), 2)
 
-        new_comment = Comment.objects.lats()
+        new_comment = Comment.objects.last()
         soup = BeautifulSoup(response.content, 'html.parser')
         self.assertIn(new_comment.post.title, soup.title.text)
         comment_area = soup.find('div', id='comment-area')
-        new_comment_div = comment_area.find('div', id=f'comment={new_comment.pk}')
+        new_comment_div = comment_area.find('div', id=f'comment-{new_comment.pk}')
         self.assertIn('Trump', new_comment_div.text)
         self.assertIn('두번째 댓글입니다.', new_comment_div.text)
 
@@ -193,6 +195,7 @@ class TestView(TestCase):
         self.assertEqual(last_post.tags.count(), 3)
         self.assertTrue(Tag.objects.get(name='new tag'))
         self.assertTrue(Tag.objects.get(name='한글 태그'))
+        self.assertEqual(Tag.objects.count(), 5)
 
     def test_update_post(self):
         update_url = f'/blog/update_post/{self.post_003.pk}/'
@@ -326,7 +329,8 @@ class TestView(TestCase):
         self.assertIn(self.post_001.content, post_area.text)
 
         self.assertIn(self.user_james.username.upper(), post_area.text)
-
+        
+        #댓글은 상세 페이지에 존재
         comments_area = soup.find('div', id='comment-area')
         comment_001_area = comments_area.find('div', id='comment-1')
         self.assertIn(self.comment_001.author.username, comment_001_area.text)
