@@ -58,6 +58,7 @@ class Post(models.Model):
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
     tags = models.ManyToManyField(Tag, blank=True)
 
+
     # Post의 pk(고유번호) + Post의 title
     def __str__(self):
         return f'[{self.pk}]{self.title} :: {self.author}'
@@ -77,6 +78,14 @@ class Post(models.Model):
 
     def get_content_markdown(self):
         return markdown(self.content)
+
+    #아바타 보여줌
+    def get_avatar_url(self):
+        if self.author.socialaccount_set.exists() :
+            return self.author.socialaccount_set.first().get_avatar_url()
+        else :
+            #return 'http://placehold.it/50x50'
+            return 'https://doitdjango.com/avatar/id/417/774db7b5af91e0bb/svg/{self.author.email}/'
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
